@@ -1,6 +1,7 @@
 import React from 'react';
 import { Button, Flex, Text, Box } from '@radix-ui/themes';
 import { DashboardIcon, PersonIcon } from '@radix-ui/react-icons';
+import Link from 'next/link';
 
 function Navbar() {
   return (
@@ -29,7 +30,7 @@ function Navbar() {
           style={{ display: 'flex', alignItems: 'center' }}
         >
           <DashboardIcon style={{ marginRight: '8px' }} />
-          Dashboard
+          <Link href="/dashboard">Dashboard</Link>
         </Button>
 
         {/* Profile Icon */}
