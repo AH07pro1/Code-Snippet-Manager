@@ -1,16 +1,9 @@
 
 import { NextRequest, NextResponse } from "next/server";
-import { z } from "zod";
 import { PrismaClient } from "@prisma/client";
+import snippetSchema from "./schema";
 
 const prisma = new PrismaClient();
-
-const schema = z.object({
-  title: z.string().min(1, { message: "Title is required" }),
-  description: z.string().min(1, { message: "Description is required" }),
-  content: z.string().min(1, { message: "Content is required" }),
-  language: z.string().min(1, { message: "Language is required" }), // ← ADD THIS
-});
 
 
 export async function GET() {
@@ -31,7 +24,7 @@ export async function POST(request: NextRequest){
       return NextResponse.json({ error: "Request body is null" }, { status: 400 });
     }
   
-    const validation = schema.safeParse(body);
+    const validation = snippetSchema.safeParse(body);
   
     if(!validation.success){
       return NextResponse.json({error: validation.error.errors}, {status: 400});

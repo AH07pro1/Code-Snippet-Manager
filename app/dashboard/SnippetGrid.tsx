@@ -1,6 +1,7 @@
 "use client";
 import React, { useEffect, useState } from 'react';
 import SnippetCard from '../components/SnippetCard';
+import { redirect } from 'next/navigation'; 
 
 function SnippetGrid() {
   const [snippets, setSnippets] = useState<any[]>([]); // State to store fetched snippets
@@ -50,6 +51,7 @@ function SnippetGrid() {
           title={snippet.title}
           language={snippet.language}
           content={snippet.content}
+          onViewClick={() =>  redirect(`/dashboard/${snippet.id}`)} // Redirect to snippet detail page on click
         />
       ))}
     </div>

@@ -6,7 +6,7 @@ import Link from 'next/link';
 function CreateSnippetBtn() {
     return (
         <div>
-            <Link href="dashboard/new-snippet" passHref>
+            <Link href="/new-snippet" passHref>
                 <Button
                     variant="solid"
                     size="2"
