@@ -10,13 +10,8 @@ import {
   TextArea,
   Select,
 } from "@radix-ui/themes";
-import { useRouter } from "next/navigation"; // Import useRouter
-
-const languages = [
-  "Html", "Css", "JavaScript", "TypeScript", "Python", "Java", "C++", "C#",
-  "Ruby", "PHP", "Swift", "Go", "Rust", "Kotlin", "Dart", "Scala", "Shell",
-  "Bash", "SQL", "R", "MATLAB", "Perl", "Lua", "Haskell", "Elixir", "Clojure", "F#"
-];
+import { useRouter } from "next/navigation";
+import { supportedLanguages } from "../data/supportedLanguages";
 
 function CreateSnippetPage() {
   const [form, setForm] = useState({
@@ -26,7 +21,7 @@ function CreateSnippetPage() {
     language: "JavaScript",
   });
 
-  const router = useRouter(); // Initialize the router for redirection
+  const router = useRouter();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -51,16 +46,14 @@ function CreateSnippetPage() {
       console.log("Snippet created:", data);
       alert("Snippet saved successfully!");
 
-      // Redirect to the dashboard after successful snippet creation
-      router.push("/dashboard"); // This will redirect to the dashboard page
-      
+      router.push("/dashboard");
+
       setForm({
         title: "",
         description: "",
         content: "",
         language: "JavaScript",
       });
-
     } catch (err) {
       console.error("Error submitting form:", err);
       alert("An error occurred while saving the snippet.");
@@ -101,9 +94,12 @@ function CreateSnippetPage() {
           >
             <Select.Trigger />
             <Select.Content>
-              {languages.map((lang) => (
-                <Select.Item key={lang} value={lang}>
-                  {lang}
+              {supportedLanguages.map((lang) => (
+                <Select.Item key={lang.name} value={lang.name}>
+                  <Flex align="center" gap="2">
+                    <img src={lang.icon} alt={lang.name} width={20} height={20} />
+                    {lang.name}
+                  </Flex>
                 </Select.Item>
               ))}
             </Select.Content>

@@ -36,6 +36,7 @@ export async function POST(request: NextRequest){
         description: body.description,
         content: body.content,
         language: body.language,
+        icon: body.icon,
         
       }
     });

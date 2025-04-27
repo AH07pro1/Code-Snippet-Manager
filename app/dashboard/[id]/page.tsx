@@ -34,6 +34,7 @@ function SnippetDetail({ params }: Props) {
     <SnippetDetailComponent
       title={data.title}
       description={data.description}
+      language={data.language}
       content={data.content}
       tags={data.tags || []}
       createdAt={new Date(data.createdAt)}

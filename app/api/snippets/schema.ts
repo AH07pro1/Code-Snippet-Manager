@@ -4,7 +4,6 @@ const snippetSchema = z.object({
   description: z.string().min(1, { message: "Description is required" }),
   content: z.string().min(1, { message: "Content is required" }),
   language: z.string().min(1, { message: "Language is required" }).optional(),
-  updatedAt: z.date().optional(),
 });
 
 export default snippetSchema;

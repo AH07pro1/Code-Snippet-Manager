@@ -21,6 +21,7 @@ model Snippet{
   description String
   tags      String[]
   language  String
+  icon      String  @default("/icons/other.svg")
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt 
 }

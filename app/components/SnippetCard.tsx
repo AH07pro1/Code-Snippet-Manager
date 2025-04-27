@@ -6,6 +6,7 @@ type SnippetCardProps = {
   title: string;
   language: string;
   content: string;
+  icon: string;
   onViewClick?: () => void;
 };
 
@@ -16,8 +17,16 @@ export default function SnippetCard({
   onViewClick,
 }: SnippetCardProps) {
   return (
-    <Card size="3" variant="classic" style={{ width: "100%", maxWidth: 450, height: "350px" }}>
-      <Flex direction="column" gap="3">
+    <Card
+      size="3"
+      variant="classic"
+      style={{
+        width: "100%",
+        maxWidth: 450,
+        height: "350px",
+      }}
+    >
+      <Flex direction="column" gap="3" style={{ height: "100%" }}>
         <Flex justify="between" align="center">
           <Text weight="bold" size="5">
             {title}
@@ -29,20 +38,27 @@ export default function SnippetCard({
 
         <div
           style={{
-            height: "200px", // Fixed height for code section
-            overflow: "hidden", // No scrolling, truncate the content
+            flex: "1", // take remaining space nicely
+            minHeight: "200px",
+            maxHeight: "200px",
+            overflow: "hidden",
+            backgroundColor: "#282a36", // Dracula background
+            borderRadius: "8px",
           }}
         >
           <SyntaxHighlighter
             language={language.toLowerCase()}
             style={dracula}
             customStyle={{
-              borderRadius: "8px",
+              height: "100%", // Stretch to container height
+              width: "100%",
               fontSize: "14px",
               padding: "12px",
-              whiteSpace: "nowrap", // Prevent wrapping of long lines
+              margin: 0,
+              whiteSpace: "nowrap",
               overflow: "hidden",
-              textOverflow: "ellipsis", // Truncate overflowed text
+              textOverflow: "ellipsis",
+              background: "transparent", // So div background shows
             }}
           >
             {content}

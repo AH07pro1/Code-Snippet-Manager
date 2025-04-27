@@ -54,7 +54,6 @@ export async function PUT(request: NextRequest, context: Context) {
         title: body.title,
         description: body.description,
         content: body.content,
-        updatedAt: body.updatedAt
       },
     });
 
