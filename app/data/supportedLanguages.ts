@@ -17,7 +17,7 @@ export const supportedLanguages = [
     },
     {
       name: "C#",
-      icon: "/icons/c#.svg"
+      icon: "/icons/csharp.svg"
     },
     {
       name: "Ruby",

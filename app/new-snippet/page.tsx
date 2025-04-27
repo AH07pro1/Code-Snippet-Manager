@@ -19,6 +19,7 @@ function CreateSnippetPage() {
     description: "",
     content: "",
     language: "JavaScript",
+    icon: "/icons/javascript.svg", // default icon to match default language
   });
 
   const router = useRouter();
@@ -53,6 +54,7 @@ function CreateSnippetPage() {
         description: "",
         content: "",
         language: "JavaScript",
+        icon: "/icons/javascript.svg",
       });
     } catch (err) {
       console.error("Error submitting form:", err);
@@ -90,7 +92,16 @@ function CreateSnippetPage() {
 
           <Select.Root
             value={form.language}
-            onValueChange={(value) => setForm({ ...form, language: value })}
+            onValueChange={(value) => {
+              const selectedLang = supportedLanguages.find(
+                (lang) => lang.name === value
+              );
+              setForm({
+                ...form,
+                language: value,
+                icon: selectedLang ? selectedLang.icon : "",
+              });
+            }}
           >
             <Select.Trigger />
             <Select.Content>

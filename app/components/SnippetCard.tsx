@@ -14,6 +14,7 @@ export default function SnippetCard({
   title,
   language,
   content,
+  icon,
   onViewClick,
 }: SnippetCardProps) {
   return (
@@ -31,9 +32,15 @@ export default function SnippetCard({
           <Text weight="bold" size="5">
             {title}
           </Text>
-          <Text color="gray" size="2">
-            {language}
-          </Text>
+
+          {/* Replace language text with icon */}
+          <img
+            src={icon}
+            alt={language + " icon"}
+            width={24}
+            height={24}
+            style={{ borderRadius: 4 }}
+          />
         </Flex>
 
         <div

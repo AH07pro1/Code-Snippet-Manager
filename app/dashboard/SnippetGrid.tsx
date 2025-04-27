@@ -51,6 +51,7 @@ function SnippetGrid() {
           title={snippet.title}
           language={snippet.language}
           content={snippet.content}
+          icon={snippet.icon}
           onViewClick={() =>  redirect(`/dashboard/${snippet.id}`)} // Redirect to snippet detail page on click
         />
       ))}

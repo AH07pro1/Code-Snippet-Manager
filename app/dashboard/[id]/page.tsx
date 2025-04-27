@@ -35,6 +35,7 @@ function SnippetDetail({ params }: Props) {
       title={data.title}
       description={data.description}
       language={data.language}
+      icon={data.icon}
       content={data.content}
       tags={data.tags || []}
       createdAt={new Date(data.createdAt)}
