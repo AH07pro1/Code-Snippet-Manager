@@ -40,7 +40,7 @@ function Navbar() {
           style={{ display: 'flex', alignItems: 'center' }}
         >
           <PersonIcon style={{ marginRight: '8px' }} />
-          <span>Profile</span>
+          <span><Link href="/profile">Profile</Link></span>
         </Button>
       </Flex>
     </Box>
