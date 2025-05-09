@@ -20,6 +20,7 @@ export const authOptions: AuthOptions= {
       if (user) {
         session.user.id = user.id;
         session.user.role = ((user as unknown) as { role: string }).role || "user"; // Ensure role exists
+        session.user.createdAt = (user as any).createdAt; 
       }
       return session;
     },
