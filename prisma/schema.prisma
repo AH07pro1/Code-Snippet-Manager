@@ -14,17 +14,24 @@ datasource db {
 }
 
 
-model Snippet{
-  id        String   @id @default(cuid())
-  title     String
-  content   String
+model Snippet {
+  id          String   @id @default(cuid())
+  title       String
+  content     String
   description String
-  tags      String[]
-  language  String
-  icon      String  @default("/icons/other.svg")
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt 
+  tags        String[]
+  language    String
+  icon        String   @default("/icons/other.svg")
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  projectId   String?   
+  project     Project?  @relation(fields: [projectId], references: [id])
+
+  userId String?  
+  user   User? @relation(fields: [userId], references: [id])
 }
+
 
 model User {
   id            String    @id @default(cuid())
@@ -39,7 +46,9 @@ model User {
   createdAt     DateTime @default(now())
   updatedAt     DateTime @updatedAt
 
-  role      Role     @default(USER) 
+  role          Role     @default(USER) 
+
+  snippets      Snippet[]  // <-- Add this line (relation back to Snippet)
 }
 
 enum Role {
@@ -89,4 +98,18 @@ model VerificationToken {
   expires    DateTime
 
   @@unique([identifier, token])
+}
+
+model Project {
+  id          String   @id @default(cuid())
+  title       String
+  description String
+  content     String?
+  tags        String[]
+  icon        String   @default("/icons/project.svg")
+ 
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  snippets    Snippet[]
+
 }
