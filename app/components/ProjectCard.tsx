@@ -34,7 +34,7 @@ export default function ProjectCard({
         {/* Top Section */}
         <Flex align="center" gap="3">
           {/* Icon as Avatar */}
-          <Avatar size="3" src={icon} fallback="🚀" radius="full" />
+          <Avatar size="3" src={icon} fallback={icon} radius="full" />
 
           <Flex direction="column" style={{ flex: 1 }}>
             <Text weight="bold" size="5">

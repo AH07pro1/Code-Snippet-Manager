@@ -1,8 +1,5 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
-// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
-// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+// This is your Prisma schema file
+// Learn more about it in the docs: https://pris.ly/d/prisma-schema
 
 generator client {
   provider = "prisma-client-js"
@@ -12,7 +9,6 @@ datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
 }
-
 
 model Snippet {
   id          String   @id @default(cuid())
@@ -26,12 +22,11 @@ model Snippet {
   updatedAt   DateTime @updatedAt
 
   projectId   String?   
-  project     Project?  @relation(fields: [projectId], references: [id])
+  project     Project?  @relation(fields: [projectId], references: [id], onDelete: Cascade) // Cascade delete when Project is deleted
 
-  userId String?  
-  user   User? @relation(fields: [userId], references: [id])
+  userId      String?  
+  user        User?     @relation(fields: [userId], references: [id])
 }
-
 
 model User {
   id            String    @id @default(cuid())
@@ -48,7 +43,7 @@ model User {
 
   role          Role     @default(USER) 
 
-  snippets      Snippet[]  // <-- Add this line (relation back to Snippet)
+  snippets      Snippet[]  // <-- Relation to Snippet
 }
 
 enum Role {
@@ -106,10 +101,9 @@ model Project {
   description String
   content     String?
   tags        String[]
-  icon        String   @default("/icons/project.svg")
+  icon        String   @default("🚀")
  
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
-  snippets    Snippet[]
-
+  snippets    Snippet[] // Relation to Snippet, child records will be deleted on project delete
 }

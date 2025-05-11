@@ -16,7 +16,7 @@ export async function GET(request: NextRequest) {
   }
 
   const { searchParams } = new URL(request.url);
-  const projectId = searchParams.get("projectId"); // 👈 read projectId from query string
+  const projectId = searchParams.get("projectId");
 
   try {
     const whereCondition: any = {
@@ -24,11 +24,8 @@ export async function GET(request: NextRequest) {
     };
 
     if (projectId) {
-      // 📌 If we have a projectId, only get snippets for that project OR global snippets (where projectId is null)
-      whereCondition.OR = [
-        { projectId: projectId },
-        { projectId: null }, // ALSO include snippets not attached to any project
-      ];
+      // Only get snippets for the given project
+      whereCondition.projectId = projectId;
     }
 
     const snippets = await prisma.snippet.findMany({
@@ -44,6 +41,7 @@ export async function GET(request: NextRequest) {
     return NextResponse.json({ error: "Internal Server Error" }, { status: 500 });
   }
 }
+
 
 
 export async function POST(request: NextRequest) {

@@ -38,6 +38,7 @@ export async function POST(request: NextRequest) {
     data: {
       title: body.title,
       description: body.description,
+      icon: body.icon,
       // If you have snippets to connect, you can add here
     },
   });

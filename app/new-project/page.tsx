@@ -11,13 +11,17 @@ import {
 } from "@radix-ui/themes";
 import { useRouter } from "next/navigation";
 
+const availableIcons = [
+  "🚀", "🎨", "💻", "📱", "📚", "🌍", "🎯", "🔒", "💡", "⚡",
+];
+
 function CreateProjectPage() {
   const [form, setForm] = useState({
     title: "",
     description: "",
     content: "",
     tags: "", // Will split into array later
-    icon: "/icons/project.svg", // Default icon for project
+    icon: "🚀", // Default icon for project
   });
 
   const router = useRouter();
@@ -30,7 +34,7 @@ function CreateProjectPage() {
       description: form.description,
       content: form.content ? form.content : null, // Content is optional
       tags: form.tags ? form.tags.split(",").map((tag) => tag.trim()) : [], // Convert string to array
-      icon: form.icon,
+      icon: form.icon, // Use the selected icon here
     };
 
     try {
@@ -55,12 +59,13 @@ function CreateProjectPage() {
 
       router.push("/dashboard");
 
+      // Reset the form, including the icon
       setForm({
         title: "",
         description: "",
         content: "",
         tags: "",
-        icon: "/icons/project.svg",
+        icon: "🚀", // Reset to default icon after submission
       });
     } catch (err) {
       console.error("Error submitting form:", err);
@@ -101,6 +106,45 @@ function CreateProjectPage() {
             value={form.tags}
             onChange={(e) => setForm({ ...form, tags: e.target.value })}
           />
+
+          {/* Icon Selection */}
+          <Flex direction="column" gap="2">
+            <Text size="4" weight="bold">Choose Icon:</Text>
+            <div
+              style={{
+                display: "flex",
+                gap: "8px", // Reduced gap for better spacing
+                flexWrap: "wrap",
+                justifyContent: "space-between", // Align first and last icons to edges
+                maxWidth: "100%", // Prevent overflow
+                marginTop: "5px",
+              }}
+            >
+              {availableIcons.map((icon, index) => (
+                <span
+                  key={index}
+                  style={{
+                    fontSize: "24px",
+                    padding: "8px",
+                    width: "50px",
+                    height: "50px",
+                    textAlign: "center",
+                    display: "flex", // Add flex display to center the icon
+                    justifyContent: "center", // Center horizontally
+                    alignItems: "center", // Center vertically
+                    border: form.icon === icon ? "2px solid #0070f3" : "1px solid #ccc",
+                    borderRadius: "6px",
+                    backgroundColor: form.icon === icon ? "#e7f3ff" : "transparent",
+                    transition: "background-color 0.2s ease",
+                    cursor: "pointer",
+                  }}
+                  onClick={() => setForm({ ...form, icon })} // Update icon on click
+                >
+                  {icon}
+                </span>
+              ))}
+            </div>
+          </Flex>
 
           <Button type="submit" color="blue" size="3">
             Save Project

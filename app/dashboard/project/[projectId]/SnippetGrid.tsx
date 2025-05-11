@@ -2,7 +2,7 @@
 
 import React, { useEffect, useState } from 'react';
 import SnippetCard from '@/app/components/SnippetCard';
-import { redirect } from 'next/navigation'; 
+import { redirect } from 'next/navigation';
 import { useSession } from "next-auth/react";
 import * as DropdownMenu from '@radix-ui/react-dropdown-menu';
 import { ChevronDownIcon } from '@radix-ui/react-icons';
@@ -24,7 +24,7 @@ function SnippetGrid({ projectId }: SnippetGridProps) {
       if (!session?.user) return;
 
       try {
-        const response = await fetch(`/api/snippets?userId=${session.user.id}&projectId=${projectId}`); 
+        const response = await fetch(`/api/snippets?userId=${session.user.id}&projectId=${projectId}`);
         if (!response.ok) {
           throw new Error('Failed to fetch snippets');
         }
@@ -54,30 +54,47 @@ function SnippetGrid({ projectId }: SnippetGridProps) {
     return <div>Error: {error}</div>;
   }
 
-  if (snippets.length === 0) {
-    return <div style={{ textAlign: 'center', padding: '40px' }}>No snippets found.</div>;
-  }
-
   const languages = ['All', ...new Set(snippets.map(snippet => snippet.language))];
 
+  const handleDeleteProject = async () => {
+    if (!confirm('Are you sure you want to delete this project? This action cannot be undone.')) {
+      return;
+    }
+
+    try {
+      const response = await fetch(`/api/projects/${projectId}`, {
+        method: 'DELETE',
+      });
+
+      if (!response.ok) {
+        throw new Error('Failed to delete project');
+      }
+
+      alert('Project deleted successfully!');
+      redirect('/dashboard');  // Redirect to dashboard after successful deletion
+    } catch (error: any) {
+      console.error('Error deleting project:', error);
+      alert('An error occurred while deleting the project.');
+    }
+  };
+
   return (
-    <div style={{ padding: '20px' }}>
+    <div style={{ padding: '20px', position: 'relative' }}>
       {/* Top Controls: Filter + Create Button */}
-      <div style={{ 
+      <div style={{
         display: 'flex', 
         alignItems: 'center', 
         gap: '10px', 
-        marginBottom: '20px',
+        marginBottom: '20px'
       }}>
-        
         {/* Create Snippet Button */}
         <CreateSnippetBtn 
           projectId={projectId}
           style={{
-            height: '40px', // Fixed height
+            height: '40px', 
             padding: '0 16px',
             fontSize: '14px',
-            borderRadius: '6px', // Same radius as dropdown
+            borderRadius: '6px',
           }}
         />
 
@@ -85,11 +102,11 @@ function SnippetGrid({ projectId }: SnippetGridProps) {
         <DropdownMenu.Root>
           <DropdownMenu.Trigger 
             style={{ 
-              height: '40px', // Match button height
+              height: '40px', 
               padding: '0 16px',
               fontSize: '14px',
               border: '1px solid #ccc', 
-              borderRadius: '6px', // Same radius as button
+              borderRadius: '6px', 
               display: 'inline-flex', 
               alignItems: 'center', 
               gap: '8px',
@@ -132,8 +149,28 @@ function SnippetGrid({ projectId }: SnippetGridProps) {
             ))}
           </DropdownMenu.Content>
         </DropdownMenu.Root>
-
       </div>
+
+      {/* Delete Project Button */}
+      <button 
+        onClick={handleDeleteProject} 
+        style={{
+          position: 'absolute',
+          top: '20px', // Position from the top
+          right: '20px', // Position from the right
+          height: '40px',
+          padding: '0 16px',
+          fontSize: '14px',
+          borderRadius: '6px',
+          backgroundColor: '#f44336',
+          color: '#fff',
+          cursor: 'pointer',
+          border: 'none',
+          transition: 'background-color 0.2s ease',
+        }}
+      >
+        Delete Project
+      </button>
 
       {/* Snippet Cards Grid */}
       <div
@@ -143,16 +180,32 @@ function SnippetGrid({ projectId }: SnippetGridProps) {
           gap: '20px',
         }}
       >
-        {filteredSnippets.map((snippet: any, index: number) => (
-          <SnippetCard
-            key={index}
-            title={snippet.title}
-            language={snippet.language}
-            content={snippet.content}
-            icon={snippet.icon}
-            onViewClick={() => redirect(`/dashboard/project/${snippet.projectId}/${snippet.id}`)}
-          />
-        ))}
+        {filteredSnippets.length > 0 ? (
+          filteredSnippets.map((snippet: any, index: number) => (
+            <SnippetCard
+              key={index}
+              title={snippet.title}
+              language={snippet.language}
+              content={snippet.content}
+              icon={snippet.icon}
+              onViewClick={() => redirect(`/dashboard/project/${snippet.projectId}/${snippet.id}`)}
+            />
+          ))
+        ) : (
+          <div
+            style={{
+              position: 'absolute',
+              top: '50%',
+              left: '50%',
+              transform: 'translate(-50%, -50%)',
+              textAlign: 'center',
+              color: '#888',
+              fontSize: '20px',
+            }}
+          >
+            No snippets found.
+          </div>
+        )}
       </div>
     </div>
   );
