@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useSession, signIn } from 'next-auth/react';
 import { Button, Flex, Text, Box } from '@radix-ui/themes';
 import { DashboardIcon, PersonIcon } from '@radix-ui/react-icons';
@@ -9,7 +9,12 @@ import { useTheme } from 'next-themes';
 
 function Navbar() {
   const { data: session, status } = useSession();
-  const { theme, setTheme } = useTheme();
+  const { theme, setTheme, resolvedTheme } = useTheme(); // use resolvedTheme
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    setMounted(true); // Only render theme-dependent stuff after mount
+  }, []);
 
   // Force system theme when logged out
   useEffect(() => {
@@ -17,6 +22,12 @@ function Navbar() {
       setTheme('system');
     }
   }, [status, setTheme]);
+
+  if (!mounted) {
+    return null; // prevent hydration mismatch
+  }
+
+  const logoSrc = resolvedTheme === 'dark' ? '/white_code_nest_icon.png' : '/code nest icon.png';
 
   return (
     <Box
@@ -32,7 +43,7 @@ function Navbar() {
       <Link href="/dashboard" style={{ textDecoration: 'none', color: 'inherit' }}>
         <Flex align="center" gap="2">
           <img
-            src={theme === 'dark' ? '/white_code_nest_icon.png' : '/code nest icon.png'}
+            src={logoSrc}
             alt="Code Nest Icon"
             style={{ width: '32px', height: '32px' }}
           />

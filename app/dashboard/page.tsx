@@ -1,14 +1,13 @@
 import React from 'react';
-import SnippetGrid from './SnippetGrid';
-import CreateSnippetBtn from './CreateSnippetBtn';
+import CreateSnippetBtn from './project/[projectId]/CreateSnippetBtn';
 import CreateProjectBtn from './CreateProjectBtn';
+import ProjectGrid from './ProjectGrid';
 
 function DashboardPage() {
   return (
     <div style={{ padding: '20px' }}>
-      <CreateSnippetBtn/>
       <CreateProjectBtn/>
-      <SnippetGrid/>
+      <ProjectGrid/>
     </div>
   );
 }

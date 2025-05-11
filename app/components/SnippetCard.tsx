@@ -1,6 +1,8 @@
 import { Flex, Text, Button, Card } from "@radix-ui/themes";
+import { EyeOpenIcon, CopyIcon } from "@radix-ui/react-icons"; // View and Copy icons
 import SyntaxHighlighter from "react-syntax-highlighter";
 import { dracula } from "react-syntax-highlighter/dist/esm/styles/hljs";
+import { useState } from "react";
 
 type SnippetCardProps = {
   title: string;
@@ -17,6 +19,18 @@ export default function SnippetCard({
   icon,
   onViewClick,
 }: SnippetCardProps) {
+  const [copied, setCopied] = useState(false);
+
+  const handleCopy = async () => {
+    try {
+      await navigator.clipboard.writeText(content);
+      setCopied(true);
+      setTimeout(() => setCopied(false), 2000);
+    } catch (err) {
+      console.error("Failed to copy: ", err);
+    }
+  };
+
   return (
     <Card
       size="3"
@@ -28,28 +42,32 @@ export default function SnippetCard({
       }}
     >
       <Flex direction="column" gap="3" style={{ height: "100%" }}>
+        {/* Title + Icon */}
         <Flex justify="between" align="center">
           <Text weight="bold" size="5">
             {title}
           </Text>
 
-          {/* Replace language text with icon */}
           <img
             src={icon}
             alt={language + " icon"}
-            width={24}
-            height={24}
-            style={{ borderRadius: 4 }}
+            style={{
+              width: "24px",
+              height: "24px",
+              objectFit: "contain",
+              borderRadius: "6px",
+            }}
           />
         </Flex>
 
+        {/* Code area */}
         <div
           style={{
-            flex: "1", // take remaining space nicely
+            flex: "1",
             minHeight: "200px",
             maxHeight: "200px",
             overflow: "hidden",
-            backgroundColor: "#282a36", // Dracula background
+            backgroundColor: "#282a36",
             borderRadius: "8px",
           }}
         >
@@ -57,7 +75,7 @@ export default function SnippetCard({
             language={language.toLowerCase()}
             style={dracula}
             customStyle={{
-              height: "100%", // Stretch to container height
+              height: "100%",
               width: "100%",
               fontSize: "14px",
               padding: "12px",
@@ -65,16 +83,33 @@ export default function SnippetCard({
               whiteSpace: "nowrap",
               overflow: "hidden",
               textOverflow: "ellipsis",
-              background: "transparent", // So div background shows
+              background: "transparent",
             }}
           >
             {content}
           </SyntaxHighlighter>
         </div>
 
-        <Button variant="solid" size="2" color="blue" onClick={onViewClick}>
-          View Full Snippet
-        </Button>
+        {/* Bottom buttons */}
+        <Flex gap="3" justify="end">
+          <Button
+            variant="soft"
+            size="2"
+            color={copied ? "green" : "gray"}
+            onClick={handleCopy}
+          >
+            <CopyIcon />
+          </Button>
+
+          <Button
+            variant="solid"
+            size="2"
+            color="blue"
+            onClick={onViewClick}
+          >
+            <EyeOpenIcon />
+          </Button>
+        </Flex>
       </Flex>
     </Card>
   );

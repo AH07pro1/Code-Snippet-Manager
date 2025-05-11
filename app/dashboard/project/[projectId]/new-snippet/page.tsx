@@ -10,8 +10,8 @@ import {
   TextArea,
   Select,
 } from "@radix-ui/themes";
-import { useRouter } from "next/navigation";
-import { supportedLanguages } from "../data/supportedLanguages";
+import { useRouter, useParams } from "next/navigation"; // ⬅️ also import useParams
+import { supportedLanguages } from "../../../../data/supportedLanguages";
 
 function CreateSnippetPage() {
   const [form, setForm] = useState({
@@ -19,10 +19,12 @@ function CreateSnippetPage() {
     description: "",
     content: "",
     language: "JavaScript",
-    icon: "/icons/javascript.svg", // default icon to match default language
+    icon: "/icons/javascript.svg",
   });
 
   const router = useRouter();
+  const params = useParams(); // ⬅️ get URL params
+  const projectId = params.projectId as string; // ⬅️ get the projectId
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -33,7 +35,10 @@ function CreateSnippetPage() {
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify(form),
+        body: JSON.stringify({
+          ...form,
+          projectId, // ⬅️ INCLUDE projectId inside body
+        }),
       });
 
       const data = await response.json();
@@ -47,7 +52,7 @@ function CreateSnippetPage() {
       console.log("Snippet created:", data);
       alert("Snippet saved successfully!");
 
-      router.push("/dashboard");
+      router.push("/dashboard"); // ✅ Go back to dashboard after saving
 
       setForm({
         title: "",
