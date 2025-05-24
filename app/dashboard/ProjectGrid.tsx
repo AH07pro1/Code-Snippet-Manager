@@ -1,7 +1,7 @@
-"use client";
-
+'use client';
 import React, { useEffect, useState } from "react";
 import ProjectCard from "../components/ProjectCard";
+import ProjectSkeletonCard from "../components/ProjectSkeletonCard"; // Import the skeleton card
 import { redirect } from "next/navigation";
 import { useSession } from "next-auth/react";
 
@@ -35,7 +35,20 @@ function ProjectGrid() {
   }, [session, status]);
 
   if (status === "loading" || loading) {
-    return <div>Loading...</div>;
+    return (
+      <div
+        style={{
+          display: "grid",
+          gridTemplateColumns: "repeat(auto-fill, minmax(300px, 1fr))",
+          gap: "20px",
+          padding: "20px",
+        }}
+      >
+        {Array.from({ length: 6 }).map((_, i) => (
+          <ProjectSkeletonCard key={i} />
+        ))}
+      </div>
+    );
   }
 
   if (error) {
@@ -58,7 +71,7 @@ function ProjectGrid() {
           description={project.description}
           tags={project.tags || []}
           icon={project.icon}
-          snippetCount={project._count?.snippets || 0} // <-- Added this
+          snippetCount={project._count?.snippets || 0}
           onViewClick={() => redirect(`/dashboard/project/${project.id}`)}
         />
       ))}

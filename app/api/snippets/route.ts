@@ -73,6 +73,7 @@ export async function POST(request: NextRequest) {
         icon: body.icon,
         userId: session.user.id, // <--- Attach userId automatically here
         projectId: body.projectId, // <--- Attach projectId if provided
+        tags: body.tags 
       },
     });
 

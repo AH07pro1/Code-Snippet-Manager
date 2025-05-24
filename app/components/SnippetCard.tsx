@@ -1,4 +1,4 @@
-import { Flex, Text, Button, Card } from "@radix-ui/themes";
+import { Flex, Text, Button, Card, Badge } from "@radix-ui/themes";
 import { EyeOpenIcon, CopyIcon } from "@radix-ui/react-icons"; // View and Copy icons
 import SyntaxHighlighter from "react-syntax-highlighter";
 import { dracula } from "react-syntax-highlighter/dist/esm/styles/hljs";
@@ -9,6 +9,7 @@ type SnippetCardProps = {
   language: string;
   content: string;
   icon: string;
+  tags?: string[];        // Added tags prop as optional array of strings
   onViewClick?: () => void;
 };
 
@@ -17,6 +18,7 @@ export default function SnippetCard({
   language,
   content,
   icon,
+  tags = [],             // default empty array if not provided
   onViewClick,
 }: SnippetCardProps) {
   const [copied, setCopied] = useState(false);
@@ -39,6 +41,8 @@ export default function SnippetCard({
         width: "100%",
         maxWidth: 450,
         height: "350px",
+        display: "flex",
+        flexDirection: "column",
       }}
     >
       <Flex direction="column" gap="3" style={{ height: "100%" }}>
@@ -59,6 +63,15 @@ export default function SnippetCard({
             }}
           />
         </Flex>
+
+        {/* Tags */}
+        <Flex gap="2" wrap="wrap">
+  {tags.map((tag, i) => (
+    <Badge key={i} color="blue" variant="soft">
+      #{tag}
+    </Badge>
+  ))}
+</Flex>
 
         {/* Code area */}
         <div
@@ -101,12 +114,7 @@ export default function SnippetCard({
             <CopyIcon />
           </Button>
 
-          <Button
-            variant="solid"
-            size="2"
-            color="blue"
-            onClick={onViewClick}
-          >
+          <Button variant="solid" size="2" color="blue" onClick={onViewClick}>
             <EyeOpenIcon />
           </Button>
         </Flex>

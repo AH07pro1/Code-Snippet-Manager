@@ -7,6 +7,7 @@ import { useSession } from "next-auth/react";
 import * as DropdownMenu from '@radix-ui/react-dropdown-menu';
 import { ChevronDownIcon } from '@radix-ui/react-icons';
 import CreateSnippetBtn from './CreateSnippetBtn';
+import SnippetSkeletonCard from '@/app/components/SnippetSkeletonCard';
 
 interface SnippetGridProps {
   projectId: string;
@@ -18,6 +19,7 @@ function SnippetGrid({ projectId }: SnippetGridProps) {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [selectedLanguage, setSelectedLanguage] = useState<string>('All');
+
 
   useEffect(() => {
     const fetchSnippets = async () => {
@@ -46,9 +48,35 @@ function SnippetGrid({ projectId }: SnippetGridProps) {
     ? snippets 
     : snippets.filter(snippet => snippet.language === selectedLanguage);
 
-  if (status === "loading" || loading) {
-    return <div>Loading...</div>;
-  }
+ if (status === "loading" || loading) {
+  return (
+    <div style={{ padding: '20px', position: 'relative' }}>
+      {/* Top Controls: Filter + Create Button */}
+      <div style={{
+        display: 'flex', 
+        alignItems: 'center', 
+        gap: '10px', 
+        marginBottom: '20px'
+      }}>
+        {/* You can optionally show disabled CreateSnippetBtn or placeholder here */}
+      </div>
+
+      {/* The same grid for loading skeletons */}
+      <div
+        style={{
+          display: 'grid',
+          gridTemplateColumns: 'repeat(auto-fill, minmax(300px, 1fr))',
+          gap: '20px',
+        }}
+      >
+        {Array.from({ length: 6}).map((_, i) => (
+          <SnippetSkeletonCard key={i} />
+        ))}
+      </div>
+    </div>
+  );
+}
+
 
   if (error) {
     return <div>Error: {error}</div>;
@@ -188,6 +216,7 @@ function SnippetGrid({ projectId }: SnippetGridProps) {
               language={snippet.language}
               content={snippet.content}
               icon={snippet.icon}
+              tags={snippet.tags}
               onViewClick={() => redirect(`/dashboard/project/${snippet.projectId}/${snippet.id}`)}
             />
           ))
@@ -212,3 +241,4 @@ function SnippetGrid({ projectId }: SnippetGridProps) {
 }
 
 export default SnippetGrid;
+           

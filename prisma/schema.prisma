@@ -102,7 +102,7 @@ model Project {
   content     String?
   tags        String[]
   icon        String   @default("🚀")
- 
+  userId      String?
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
   snippets    Snippet[] // Relation to Snippet, child records will be deleted on project delete

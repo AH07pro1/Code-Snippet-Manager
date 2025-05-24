@@ -1,5 +1,4 @@
-"use client";
-
+'use client';
 import React, { useState } from "react";
 import {
   Box,
@@ -10,7 +9,7 @@ import {
   TextArea,
   Select,
 } from "@radix-ui/themes";
-import { useRouter, useParams } from "next/navigation"; // ⬅️ also import useParams
+import { useRouter, useParams } from "next/navigation";
 import { supportedLanguages } from "../../../../data/supportedLanguages";
 
 function CreateSnippetPage() {
@@ -22,9 +21,24 @@ function CreateSnippetPage() {
     icon: "/icons/javascript.svg",
   });
 
+  const [tags, setTags] = useState<string[]>([]);
+  const [tagInput, setTagInput] = useState("");
+
   const router = useRouter();
-  const params = useParams(); // ⬅️ get URL params
-  const projectId = params.projectId as string; // ⬅️ get the projectId
+  const params = useParams();
+  const projectId = params.projectId as string;
+
+  const handleAddTag = () => {
+    const newTag = tagInput.trim();
+    if (newTag && !tags.includes(newTag)) {
+      setTags([...tags, newTag]);
+      setTagInput("");
+    }
+  };
+
+  const handleRemoveTag = (tagToRemove: string) => {
+    setTags(tags.filter((tag) => tag !== tagToRemove));
+  };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -37,7 +51,8 @@ function CreateSnippetPage() {
         },
         body: JSON.stringify({
           ...form,
-          projectId, // ⬅️ INCLUDE projectId inside body
+          projectId,
+          tags,
         }),
       });
 
@@ -49,10 +64,8 @@ function CreateSnippetPage() {
         return;
       }
 
-      console.log("Snippet created:", data);
       alert("Snippet saved successfully!");
-
-      router.push("/dashboard"); // ✅ Go back to dashboard after saving
+      router.push("/dashboard");
 
       setForm({
         title: "",
@@ -61,6 +74,8 @@ function CreateSnippetPage() {
         language: "JavaScript",
         icon: "/icons/javascript.svg",
       });
+      setTags([]);
+      setTagInput("");
     } catch (err) {
       console.error("Error submitting form:", err);
       alert("An error occurred while saving the snippet.");
@@ -120,6 +135,48 @@ function CreateSnippetPage() {
               ))}
             </Select.Content>
           </Select.Root>
+
+          {/* Tags input */}
+          <Box>
+            <TextField.Root
+              placeholder="Add a tag and press Enter"
+              value={tagInput}
+              onChange={(e) => setTagInput(e.target.value)}
+              onKeyDown={(e) => {
+                if (e.key === "Enter") {
+                  e.preventDefault();
+                  handleAddTag();
+                }
+              }}
+            />
+
+            <Flex gap="2" mt="3" wrap="wrap">
+              {tags.map((tag) => (
+                <Box
+                  key={tag}
+                  style={{
+                    backgroundColor: "#e0e0e0",
+                    padding: "4px 8px",
+                    borderRadius: "12px",
+                    display: "flex",
+                    alignItems: "center",
+                    gap: "6px",
+                    cursor: "default",
+                  }}
+                >
+                  <Text size="2" style={{ color: "#222" }}>{tag}</Text>
+                  <Button
+                    type="button"
+                    onClick={() => handleRemoveTag(tag)}
+                    size="1"
+                    style={{ padding: "0 4px" }}
+                  >
+                    ✕
+                  </Button>
+                </Box>
+              ))}
+            </Flex>
+          </Box>
 
           <Button type="submit" color="blue" size="3">
             Save Snippet
